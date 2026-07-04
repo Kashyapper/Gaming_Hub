@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Hub</title>
+  <!-- In-browser visual error console -->
+  <script>
+    window.addEventListener('error', function(e) {
+      const errDiv = document.getElementById('js-critical-error') || document.createElement('div');
+      errDiv.id = 'js-critical-error';
+      errDiv.style.position = 'fixed';
+      errDiv.style.top = '0';
+      errDiv.style.left = '0';
+      errDiv.style.right = '0';
+      errDiv.style.background = '#ef4444';
+      errDiv.style.color = 'white';
+      errDiv.style.padding = '12px 20px';
+      errDiv.style.zIndex = '99999';
+      errDiv.style.fontFamily = 'monospace';
+      errDiv.style.fontSize = '12px';
+      errDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.5)';
+      errDiv.style.textAlign = 'left';
+      errDiv.style.wordBreak = 'break-all';
+      errDiv.innerHTML = `<strong>JS CRITICAL ERROR:</strong> ${e.message} <br><small>at ${e.filename}:${e.lineno}:${e.colno}</small>`;
+      document.body.appendChild(errDiv);
+    });
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=1.1">
+</head>
+<body>
+  <!-- App Container -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Nav Bar -->
+    <header class="app-header hidden" id="app-header">
+      <div class="logo" id="logo-nav" style="cursor: pointer;">
+        <span class="logo-accent">GAMING</span>HUB
+      </div>
+      <div class="header-controls">
+        <button id="btn-sound" class="btn-icon" title="Toggle Sound">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.77 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+          </svg>
+        </button>
+        <button id="btn-friends" class="btn-icon" title="Friends & Chat">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.25,11.89 17,10.28 17,8.5C17,5.46 14.54,3 11.5,3C8.46,3 6,5.46 6,8.5C6,10.28 6.75,11.89 7.97,13.05C7.62,13 7.29,13 7,13C3.69,13 1,15.69 1,19V21H22V19C22,15.69 19.31,13 16,13M11.5,5C13.43,5 15,6.57 15,8.5C15,10.43 13.43,12 11.5,12C9.57,12 8,10.43 8,8.5C8,6.57 9.57,5 11.5,5M3,19C3,16.79 4.79,15 7,15C7.9,15 8.74,15.3 9.43,15.8C8.53,16.89 8,18.38 8,20H3V19M11.5,20C10.67,20 10,19.33 10,18.5C10,17.67 10.67,17 11.5,17C12.33,17 13,17.67 13,18.5C13,19.33 12.33,20 11.5,20M20,20H15C15,18.38 14.47,16.89 13.57,15.8C14.26,15.3 15.1,15 16,15C18.21,15 20,16.79 20,19V20Z" />
+          </svg>
+          <span class="badge hidden" id="badge-friends">0</span>
+        </button>
+        <button id="btn-stats-nav" class="btn btn-secondary btn-sm" title="View Stats" style="margin-left: 0.5rem; font-size: 0.75rem; padding: 0.35rem 0.8rem;" onclick="window.GamingHubUI.showScreen('screen-stats')">Stats</button>
+        <div class="user-profile-header" id="user-profile-trigger">
+          <div class="avatar avatar-sm" id="hdr-avatar">U</div>
+          <span class="username" id="hdr-username">Guest</span>
+        </div>
+        <button id="btn-logout" class="btn btn-secondary btn-sm" title="Log Out" style="margin-left: 0.5rem; font-size: 0.75rem; padding: 0.35rem 0.8rem;">Log Out</button>
+      </div>
+    </header>
+
+    <!-- 1. LOGIN SCREEN -->
+    <section class="screen screen-login" id="screen-login">
+      <div class="login-card">
+        <h1 class="logo-large"><span class="logo-accent">GAMING</span>HUB</h1>
+        <p class="subtitle">Log in to your account or create a new one</p>
+        
+        <div class="auth-tabs" id="auth-tabs">
+          <button class="auth-tab-btn active" data-tab="auth-login-panel">Log In</button>
+          <button class="auth-tab-btn" data-tab="auth-signup-panel">Sign Up</button>
+        </div>
+
+        <!-- Log In Panel -->
+        <div class="auth-panel active" id="auth-login-panel">
+          <form id="form-login" class="login-form">
+            <div class="input-group">
+              <input type="text" id="input-username" required maxlength="15" autocomplete="off" placeholder="Username...">
+            </div>
+            <div class="input-group password-group">
+              <input type="password" id="input-password" required maxlength="20" placeholder="Password...">
+              <button type="button" class="btn-toggle-password" data-target="input-password">Show</button>
+            </div>
+            <button type="submit" class="btn btn-primary btn-glow full-width">Enter Hub</button>
+          </form>
+        </div>
+
+        <!-- Sign Up Panel -->
+        <div class="auth-panel" id="auth-signup-panel">
+          <form id="form-signup" class="login-form">
+            <div class="input-group">
+              <input type="text" id="input-signup-username" required maxlength="15" autocomplete="off" placeholder="Choose Username...">
+            </div>
+            <div class="input-group password-group">
+              <input type="password" id="input-signup-password" required maxlength="20" placeholder="Create Password...">
+              <button type="button" class="btn-toggle-password" data-target="input-signup-password">Show</button>
+            </div>
+            <div class="input-group password-group">
+              <input type="password" id="input-signup-confirm-password" required maxlength="20" placeholder="Confirm Password...">
+              <button type="button" class="btn-toggle-password" data-target="input-signup-confirm-password">Show</button>
+            </div>
+            <button type="submit" class="btn btn-primary btn-glow full-width">Create Account</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. DASHBOARD SCREEN -->
+    <section class="screen screen-dashboard hidden" id="screen-dashboard">
+      <div class="dashboard-layout">
+        <!-- Hero Section / Player Stats Banner -->
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h2>Welcome Back, <span class="text-glow" id="welcome-username">Player</span>!</h2>
+            <p>Ready to climb the ranks? Choose a game to play.</p>
+          </div>
+          <div class="quick-stats">
+            <div class="stat-card">
+              <span class="stat-label">Total Cash</span>
+              <span class="stat-value" id="stat-cash">$1,000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="games-section">
+          <h3>Games Library <span class="games-count">3 / 10 Games</span></h3>
+          <div class="games-grid">
+            <!-- Active Game: Texas Hold'em Poker -->
+            <div class="game-card" id="btn-play-poker-card">
+              <div class="game-badge">POPULAR</div>
+              <div class="game-image-placeholder" style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white; filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));">
+                  <rect x="4" y="6" width="11" height="15" rx="1.5" transform="rotate(-10 4 6)" fill="rgba(255,255,255,0.18)" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="9" y="3" width="11" height="15" rx="1.5" fill="#ffffff" stroke="none"/>
+                  <path d="M14.5 7l-2 3.5l2 3.5l2-3.5z" fill="#e11d48" stroke="none"/>
+                </svg>
+              </div>
+              <div class="game-info">
+                <h4>Texas Hold'em Poker</h4>
+                <p>8-Player real-time online poker. Starting stack: $1,000.</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-poker">Find Match</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-play-against-friends">Play Against Friends</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="game-card" id="btn-play-chess-card">
+              <div class="game-badge" style="background: var(--accent-purple); box-shadow: 0 0 10px var(--accent-purple-glow);">NEW</div>
+              <div class="game-image-placeholder" style="background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));">
+                  <path d="M5 21h14M6 18h12M12 15V8M9 11l3-3 3 3M8 15h8" stroke-width="2"/>
+                  <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="game-info">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                  <span style="font-family: var(--font-family-header); font-weight: 800; background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.3));">COOKED CHESS</span>
+                </div>
+                <p>Play 1v1 chess against friends or matchmaking with Elo ratings!</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-chess">Find Match</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-chess-challenge-friend">Challenge a Friend</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placeholders for 9 other games -->
+            <!-- Active Game: Nitro Type -->
+            <div class="game-card" id="btn-play-nitro-card">
+              <div class="game-badge" style="background: var(--accent-purple); box-shadow: 0 0 10px var(--accent-purple-glow);">NT</div>
+              <div class="game-image-placeholder" style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white; filter: drop-shadow(0 0 8px rgba(255,255,255,0.45));">
+                  <path d="M10 2h4M4 13h16M2 17h20M5 10h14" stroke-width="2"/>
+                  <circle cx="6" cy="18" r="2" fill="currentColor"/>
+                  <circle cx="18" cy="18" r="2" fill="currentColor"/>
+                  <path d="M7 6h10l2 4H5L7 6z" stroke-width="2" fill="rgba(255,255,255,0.2)"/>
+                </svg>
+              </div>
+              <div class="game-info">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem;">
+                  <span style="font-family: var(--font-family-header); font-weight: 800; background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 4px rgba(219, 39, 119, 0.3));">NITRO TYPE</span>
+                  <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);" id="dash-nitro-stats">Lvl 1 (⭐0)</span>
+                </div>
+                <p>Speed-typing racing. Match with players and customize your car!</p>
+                <div class="game-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button class="btn btn-primary btn-sm" id="btn-play-nitro">Find Match</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-nitro-challenge-friend">Invite a Friend</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-nitro-shop">Car Shop</button>
+                </div>
+              </div>
+            </div>
+            <!-- Active Game: Hexanaut.io -->
+            <div class="game-card" id="btn-play-hexanaut-card">
+              <div class="game-badge" style="background: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold-glow);">HEX</div>
+              <div class="game-image-placeholder" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%);">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white; filter: drop-shadow(0 0 8px rgba(255,255,255,0.45));">
+                  <path d="M12 2l8.66 5v10L12 22l-8.66-5V7z" fill="rgba(255,255,255,0.2)"/>
+                </svg>
+              </div>
+              <div class="game-info">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem;">
+                  <span style="font-family: var(--font-family-header); font-weight: 800; background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.3));">HEXANAUT.IO</span>
+                  <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);" id="dash-hexanaut-stats">Lvl 1</span>
+                </div>
+                <p>Capture territory, cut player tails, and dominate the hexagonal arena!</p>
+                <div class="game-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button class="btn btn-primary btn-sm" id="btn-play-hexanaut">Find Match</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-hexanaut-challenge-friend">Invite a Friend</button>
+                </div>
+              </div>
+            </div>
+            <div class="game-card" id="btn-play-flappy-card">
+              <div class="game-badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">ARCADE</div>
+              <div class="game-image-placeholder" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">🐦</div>
+              <div class="game-info">
+                <h4>Flappy Bird</h4>
+                <p>Navigate through pipes and set the ultimate high score!</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-flappy">Play Game</button>
+                </div>
+              </div>
+            </div>
+            <div class="game-card" id="btn-play-tictactoe-card">
+              <div class="game-badge" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">STRATEGY</div>
+              <div class="game-image-placeholder" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">❌</div>
+              <div class="game-info">
+                <h4>Tic Tac Toe</h4>
+                <p>Challenge our unbeatable Minimax AI to a battle of wits!</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-tictactoe">Play Game</button>
+                </div>
+              </div>
+            </div>
+            <div class="game-card" id="btn-play-snake-card">
+              <div class="game-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">CLASSIC</div>
+              <div class="game-image-placeholder" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">🐍</div>
+              <div class="game-info">
+                <h4>Snake Arena</h4>
+                <p>Classic retro snake with neon graphics and speed acceleration!</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-snake">Play Game</button>
+                </div>
+              </div>
+            </div>
+            <div class="game-card" id="btn-play-2048-card">
+              <div class="game-badge" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">PUZZLE</div>
+              <div class="game-image-placeholder" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">🔢</div>
+              <div class="game-info">
+                <h4>2048</h4>
+                <p>Slide matching tiles together and aim for the 2048 block!</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-2048">Play Game</button>
+                </div>
+              </div>
+            </div>
+            <div class="game-card" id="btn-play-minesweeper-card">
+              <div class="game-badge" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">LOGIC</div>
+              <div class="game-image-placeholder" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">💣</div>
+              <div class="game-info">
+                <h4>Minesweeper</h4>
+                <p>Clear the board without hitting any hidden mines!</p>
+                <div class="game-actions">
+                  <button class="btn btn-primary btn-sm" id="btn-play-minesweeper">Play Game</button>
+                </div>
+              </div>
+            </div>
+            <div class="game-card locked">
+              <div class="game-badge locked-badge">LOCKED</div>
+              <div class="game-image-placeholder">🎱</div>
+              <div class="game-info">
+                <h4>8-Ball Pool</h4>
+                <p>Classic pool against friends. Coming Soon.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS SCREEN -->
+    <section class="screen screen-stats hidden" id="screen-stats">
+      <div class="stats-container">
+        <div class="stats-header">
+          <button class="btn btn-secondary btn-sm" id="btn-stats-back" style="align-self: flex-start;" onclick="window.GamingHubUI.showScreen('screen-dashboard')">
+            ← Back to Dashboard
+          </button>
+          <h2>Player Achievements & Stats</h2>
+          <p class="subtitle" style="font-family: var(--font-family-body);">View your track records across all games</p>
+        </div>
+
+        <div class="stats-layout">
+          <!-- Left side: Game Tabs Navigation -->
+          <div class="stats-tabs-nav" id="stats-tabs-nav">
+            <button class="stats-tab-btn active" data-game-tab="stats-poker">♠️ Texas Hold'em Poker</button>
+            <button class="stats-tab-btn" data-game-tab="stats-chess">♟️ Cooked Chess</button>
+            <button class="stats-tab-btn" data-game-tab="stats-nitro">🏎️ Nitro Type</button>
+            <button class="stats-tab-btn" data-game-tab="stats-hexanaut">🟢 Hexanaut.io</button>
+            <button class="stats-tab-btn" data-game-tab="stats-flappy">🐦 Flappy Bird</button>
+            <button class="stats-tab-btn" data-game-tab="stats-tictactoe">❌ Tic Tac Toe</button>
+            <button class="stats-tab-btn" data-game-tab="stats-snake">🐍 Snake Arena</button>
+            <button class="stats-tab-btn" data-game-tab="stats-2048">🔢 2048 Puzzle</button>
+            <button class="stats-tab-btn" data-game-tab="stats-minesweeper">💣 Minesweeper</button>
+            <button class="stats-tab-btn" data-game-tab="stats-pool">🎱 8-Ball Pool</button>
+          </div>
+
+          <!-- Right side: Stats Content Panel -->
+          <div class="stats-content-panel">
+            <!-- Poker Stats Panel -->
+            <div class="stats-panel active" id="stats-poker">
+              <div class="stats-panel-header">
+                <h3>Texas Hold'em Poker</h3>
+                <span class="game-badge">ACTIVE</span>
+              </div>
+              <div class="stats-grid">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🏆</div>
+                  <div class="stats-card-info">
+                    <span class="label">Poker Wins</span>
+                    <span class="value" id="stats-poker-wins">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">💰</div>
+                  <div class="stats-card-info">
+                    <span class="label">Total Chips Cash</span>
+                    <span class="value" id="stats-poker-cash">$0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🎖️</div>
+                  <div class="stats-card-info">
+                    <span class="label">Player Class / Rank</span>
+                    <span class="value" id="stats-poker-rank">Amateur</span>
+                  </div>
+                </div>
+              </div>
+              <div class="stats-two-column">
+                <div class="stats-visual-box">
+                  <h4>Recent Match History</h4>
+                  <div class="stats-history-list" id="poker-history-list">
+                    <div class="history-item empty">No matches completed yet.</div>
+                  </div>
+                </div>
+                <div class="stats-visual-box">
+                  <h4>Wins Leaderboard</h4>
+                  <div class="stats-leaderboard-list" id="poker-leaderboard-list">
+                    <div class="history-item empty">Loading leaderboard...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chess Stats Panel -->
+            <div class="stats-panel" id="stats-chess">
+              <div class="stats-panel-header">
+                <h3>Cooked Chess</h3>
+                <span class="game-badge" style="background: var(--color-green);">ACTIVE</span>
+              </div>
+              <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">⚡</div>
+                  <div class="stats-card-info">
+                    <span class="label">Bullet ELO</span>
+                    <span class="value" id="stats-chess-bullet">100</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🔥</div>
+                  <div class="stats-card-info">
+                    <span class="label">Blitz ELO</span>
+                    <span class="value" id="stats-chess-blitz">100</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">⏱️</div>
+                  <div class="stats-card-info">
+                    <span class="label">Rapid ELO</span>
+                    <span class="value" id="stats-chess-rapid">100</span>
+                  </div>
+                </div>
+              </div>
+              <div class="stats-two-column">
+                <div class="stats-visual-box">
+                  <h4>Recent Chess Match History</h4>
+                  <div class="stats-history-list" id="chess-history-list">
+                    <div class="history-item empty">No matches completed yet.</div>
+                  </div>
+                </div>
+                <div class="stats-visual-box">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                    <h4 style="margin: 0;">ELO Leaderboard</h4>
+                    <div class="leaderboard-pills" id="chess-leaderboard-pills">
+                      <button class="pill-btn active" data-sort-cat="bullet" onclick="window.GamingHubUI.sortChessLeaderboard('bullet')">Bullet</button>
+                      <button class="pill-btn" data-sort-cat="blitz" onclick="window.GamingHubUI.sortChessLeaderboard('blitz')">Blitz</button>
+                      <button class="pill-btn" data-sort-cat="rapid" onclick="window.GamingHubUI.sortChessLeaderboard('rapid')">Rapid</button>
+                    </div>
+                  </div>
+                  <div class="stats-leaderboard-list" id="chess-leaderboard-list">
+                    <div class="history-item empty">Loading leaderboard...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nitro Type Stats Panel -->
+            <div class="stats-panel" id="stats-nitro">
+              <div class="stats-panel-header">
+                <h3>🏎️ Nitro Type</h3>
+                <span class="game-badge" style="background: var(--accent-purple);">ACTIVE</span>
+              </div>
+              <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">📈</div>
+                  <div class="stats-card-info">
+                    <span class="label">Level</span>
+                    <span class="value" id="stats-nitro-level">1</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">⭐</div>
+                  <div class="stats-card-info">
+                    <span class="label">Stars</span>
+                    <span class="value" id="stats-nitro-stars">0 / 3</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🪙</div>
+                  <div class="stats-card-info">
+                    <span class="label">Coins</span>
+                    <span class="value" id="stats-nitro-coins">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🚗</div>
+                  <div class="stats-card-info">
+                    <span class="label">Equipped Car</span>
+                    <span class="value" id="stats-nitro-equipped">Default Car</span>
+                  </div>
+                </div>
+              </div>
+              <div class="stats-two-column">
+                <div class="stats-visual-box">
+                  <h4>Owned Cars Gallery</h4>
+                  <div class="stats-cars-list" id="stats-nitro-cars-list" style="display:flex; gap:0.5rem; flex-wrap:wrap; padding: 0.5rem;">
+                    <!-- List of owned cars -->
+                  </div>
+                </div>
+                <div class="stats-visual-box">
+                  <h4>Level Leaderboard</h4>
+                  <div class="stats-leaderboard-list" id="nitro-leaderboard-list">
+                    <div class="history-item empty">Loading leaderboard...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hexanaut Stats Panel -->
+            <div class="stats-panel" id="stats-hexanaut">
+              <div class="stats-panel-header">
+                <h3>🟢 Hexanaut.io</h3>
+                <span class="game-badge" style="background: var(--accent-gold);">ACTIVE</span>
+              </div>
+              <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">📈</div>
+                  <div class="stats-card-info">
+                    <span class="label">Level</span>
+                    <span class="value" id="stats-hexanaut-level">1</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">👑</div>
+                  <div class="stats-card-info">
+                    <span class="label">Max Captured %</span>
+                    <span class="value" id="stats-hexanaut-max-percent">0%</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🪙</div>
+                  <div class="stats-card-info">
+                    <span class="label">Coins</span>
+                    <span class="value" id="stats-hexanaut-coins">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">⚔️</div>
+                  <div class="stats-card-info">
+                    <span class="label">Matches Played</span>
+                    <span class="value" id="stats-hexanaut-games">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🏆</div>
+                  <div class="stats-card-info">
+                    <span class="label">Wins</span>
+                    <span class="value" id="stats-hexanaut-wins">0</span>
+                  </div>
+                </div>
+              </div>
+              <div class="stats-two-column">
+                <div class="stats-visual-box">
+                  <h4>Top Percentage Leaderboard</h4>
+                  <div class="stats-leaderboard-list" id="hexanaut-leaderboard-list">
+                    <div class="history-item empty">Loading leaderboard...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flappy Bird Stats Panel -->
+            <div class="stats-panel" id="stats-flappy">
+              <div class="stats-panel-header">
+                <h3>🐦 Flappy Bird</h3>
+                <span class="game-badge" style="background: var(--accent-gold);">ACTIVE</span>
+              </div>
+              <div class="stats-grid">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🏆</div>
+                  <div class="stats-card-info">
+                    <span class="label">High Score</span>
+                    <span class="value" id="stats-flappy-highscore">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🎮</div>
+                  <div class="stats-card-info">
+                    <span class="label">Games Played</span>
+                    <span class="value" id="stats-flappy-games">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tic Tac Toe Stats Panel -->
+            <div class="stats-panel" id="stats-tictactoe">
+              <div class="stats-panel-header">
+                <h3>❌ Tic Tac Toe</h3>
+                <span class="game-badge" style="background: var(--accent-gold);">ACTIVE</span>
+              </div>
+              <div class="stats-grid">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">👑</div>
+                  <div class="stats-card-info">
+                    <span class="label">Wins</span>
+                    <span class="value" id="stats-tictactoe-wins">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">💀</div>
+                  <div class="stats-card-info">
+                    <span class="label">Losses</span>
+                    <span class="value" id="stats-tictactoe-losses">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🤝</div>
+                  <div class="stats-card-info">
+                    <span class="label">Draws</span>
+                    <span class="value" id="stats-tictactoe-draws">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Snake Arena Stats Panel -->
+            <div class="stats-panel" id="stats-snake">
+              <div class="stats-panel-header">
+                <h3>🐍 Snake Arena</h3>
+                <span class="game-badge" style="background: var(--accent-gold);">ACTIVE</span>
+              </div>
+              <div class="stats-grid">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🏆</div>
+                  <div class="stats-card-info">
+                    <span class="label">High Score</span>
+                    <span class="value" id="stats-snake-highscore">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🎮</div>
+                  <div class="stats-card-info">
+                    <span class="label">Games Played</span>
+                    <span class="value" id="stats-snake-games">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2048 Puzzle Stats Panel -->
+            <div class="stats-panel" id="stats-2048">
+              <div class="stats-panel-header">
+                <h3>🔢 2048 Puzzle</h3>
+                <span class="game-badge" style="background: var(--accent-gold);">ACTIVE</span>
+              </div>
+              <div class="stats-grid">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">⭐️</div>
+                  <div class="stats-card-info">
+                    <span class="label">Highest Tile</span>
+                    <span class="value" id="stats-2048-tile">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🎮</div>
+                  <div class="stats-card-info">
+                    <span class="label">Games Played</span>
+                    <span class="value" id="stats-2048-games">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Minesweeper Stats Panel -->
+            <div class="stats-panel" id="stats-minesweeper">
+              <div class="stats-panel-header">
+                <h3>💣 Minesweeper</h3>
+                <span class="game-badge" style="background: var(--accent-gold);">ACTIVE</span>
+              </div>
+              <div class="stats-grid">
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">⏱️</div>
+                  <div class="stats-card-info">
+                    <span class="label">Fastest Time</span>
+                    <span class="value" id="stats-minesweeper-time">999s</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🏆</div>
+                  <div class="stats-card-info">
+                    <span class="label">Wins</span>
+                    <span class="value" id="stats-minesweeper-wins">0</span>
+                  </div>
+                </div>
+                <div class="stats-card-premium">
+                  <div class="stats-card-icon">🎮</div>
+                  <div class="stats-card-info">
+                    <span class="label">Games Played</span>
+                    <span class="value" id="stats-minesweeper-games">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Generic Locked Game Panel -->
+            <div class="stats-panel" id="stats-locked-panel">
+              <div class="stats-locked-message">
+                <div class="lock-icon">🔒</div>
+                <h3>Stats Locked</h3>
+                <p>Play matches in this game to unlock stats tracking. This game is currently locked or under development.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MATCHMAKING SCREEN -->
+    <section class="screen screen-matchmaking hidden" id="screen-matchmaking">
+      <div class="matchmaking-container">
+        <h2>Finding Matchmaking Players</h2>
+        <p class="subtitle">Texas Hold'em Poker • 8 Players Required</p>
+        
+        <!-- Rotating Radar Loader -->
+        <div class="radar-container">
+          <div class="radar-circle"></div>
+          <div class="radar-sweep"></div>
+          <div class="radar-timer" id="matchmaking-timer">15</div>
+        </div>
+
+        <!-- Player Slots Status -->
+        <div class="matchmaking-lobby">
+          <div class="lobby-grid" id="lobby-grid">
+            <!-- Dynamically populated slots -->
+          </div>
+        </div>
+        
+        <button class="btn btn-secondary" id="btn-cancel-matchmaking">Cancel Search</button>
+      </div>
+    </section>
+
+    <!-- 4. POKER GAME SCREEN -->
+    <section class="screen screen-game hidden" id="screen-game">
+      <div class="poker-room-header">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-game">
+          ← Leave Game
+        </button>
+        <div class="pot-info">
+          POT: <span class="pot-value" id="game-pot-val">$0</span>
+        </div>
+        <div class="game-message" id="game-message">
+          Waiting for other players...
+        </div>
+      </div>
+
+      <!-- Poker Table Container -->
+      <div class="poker-table-container">
+        <div class="poker-table">
+          <!-- Felt logo/accents -->
+          <div class="table-felt">
+            <div class="table-felt-center">
+              <span>GAMING HUB POKER</span>
+            </div>
+          </div>
+
+          <!-- Pot Display in center -->
+          <div class="center-pot" id="center-pot">
+            <span class="pot-label">POT</span>
+            <span class="pot-amount" id="pot-amount">$0</span>
+            <div class="pot-chips-visual" id="pot-chips-visual"></div>
+          </div>
+
+          <!-- Community Cards -->
+          <div class="community-cards-container" id="community-cards">
+            <div class="card-slot card-placeholder" id="comm-1"></div>
+            <div class="card-slot card-placeholder" id="comm-2"></div>
+            <div class="card-slot card-placeholder" id="comm-3"></div>
+            <div class="card-slot card-placeholder" id="comm-4"></div>
+            <div class="card-slot card-placeholder" id="comm-5"></div>
+          </div>
+
+          <!-- Player Seats (Absolute Positioned, arranged around the table) -->
+          <div class="player-seats" id="player-seats">
+            <!-- Seat templates will be placed dynamically in positions 0 to 7 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Player Control HUD -->
+      <div class="poker-controls hidden" id="poker-controls">
+        <div class="hud-inner">
+          
+          <!-- Chips breakdown visualizer -->
+          <div class="player-chips-breakdown" id="hud-chips-breakdown">
+            <!-- Dynamically show white, red, green, blue, black stack indicators -->
+          </div>
+
+          <!-- Actions Buttons -->
+          <div class="action-buttons">
+            <button class="btn btn-action fold" id="btn-fold">Fold</button>
+            <button class="btn btn-action check" id="btn-check">Check</button>
+            <button class="btn btn-action match" id="btn-match">Call ($0)</button>
+            <div class="raise-wrapper">
+              <button class="btn btn-action raise" id="btn-raise">Raise ($0+)</button>
+              <!-- Raise slider popup -->
+              <div class="raise-panel hidden" id="raise-panel">
+                <div class="raise-panel-inner">
+                  <div class="raise-values">
+                    <span id="raise-min-val">$0</span>
+                    <input type="range" id="raise-slider" min="10" max="1000" step="5" value="10">
+                    <span id="raise-max-val">$0</span>
+                  </div>
+                  <div class="raise-input-row">
+                    <input type="number" id="raise-num-input" min="10" step="5">
+                    <button class="btn btn-primary btn-sm" id="btn-raise-confirm">Bet</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. COOKED CHESS GAME SCREEN -->
+    <section class="screen screen-chess hidden" id="screen-chess">
+      <div class="chess-room-header">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-chess">
+          ← Leave Game
+        </button>
+        <div class="chess-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #a78bfa;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px rgba(167, 139, 250, 0.5));">
+            <path d="M5 21h14M6 18h12M12 15V8M9 11l3-3 3 3M8 15h8" stroke-width="2"/>
+            <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
+          </svg>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 0.9rem;">COOKED CHESS</span>
+        </div>
+        <div class="chess-opponent-info">
+          Opponent: <span id="chess-opp-name" style="font-weight: 600;">Player 2</span> (<span id="chess-opp-rating">100</span>)
+        </div>
+        <div class="chess-game-message" id="chess-message">
+          Your Turn
+        </div>
+      </div>
+
+      <div class="chess-layout-container">
+        <!-- Evaluation Bar on the left (visible during game and analysis) -->
+        <div class="chess-eval-container" id="chess-eval-container">
+          <div class="chess-eval-bar" id="chess-eval-bar">
+            <div class="chess-eval-black" id="chess-eval-black" style="height: 50%;"></div>
+            <div class="chess-eval-white" id="chess-eval-white" style="height: 50%;"></div>
+          </div>
+          <div class="chess-eval-value" id="chess-eval-value">0.0</div>
+        </div>
+
+        <!-- Chess Board Wrapper -->
+        <div class="chess-board-wrapper">
+          <!-- Top Player (Opponent) Timer and HUD -->
+          <div class="chess-hud-player opponent">
+            <div class="chess-hud-avatar" id="chess-opp-avatar">O</div>
+            <div class="chess-hud-details">
+              <span id="chess-opp-hud-name">Opponent</span>
+              <span class="chess-hud-rating" id="chess-opp-hud-rating">100</span>
+            </div>
+            <div class="chess-timer clock-black" id="clock-black">03:00</div>
+          </div>
+
+          <!-- The Chess Board -->
+          <div class="chess-board" id="chess-board-grid">
+            <!-- 64 squares populated dynamically -->
+          </div>
+
+          <!-- Bottom Player (Local) Timer and HUD -->
+          <div class="chess-hud-player local">
+            <div class="chess-hud-avatar" id="chess-local-avatar">U</div>
+            <div class="chess-hud-details">
+              <span id="chess-local-hud-name">You</span>
+              <span class="chess-hud-rating" id="chess-local-hud-rating">100</span>
+            </div>
+            <div class="chess-timer clock-white" id="clock-white">03:00</div>
+          </div>
+        </div>
+
+        <!-- Side Panel for notation, history, chat, and controls -->
+        <div class="chess-side-panel">
+          <div class="chess-panel-section">
+            <h3>Time Control: <span id="chess-tc-label">3 Min (Blitz)</span></h3>
+          </div>
+
+          <div class="chess-notation-container">
+            <h4>Moves Notation</h4>
+            <div class="chess-moves-list" id="chess-moves-list">
+              <!-- e.g. 1. e4 e5 -->
+            </div>
+          </div>
+
+          <!-- Analysis Action Buttons (only visible when in analysis mode) -->
+          <div class="chess-analysis-controls hidden" id="chess-analysis-controls">
+            <h4 id="chess-analysis-comment" style="font-size: 0.85rem; color: var(--accent-purple); font-weight: 600; margin-bottom: 8px;">Review: Book Move</h4>
+            <div class="analysis-buttons-row">
+              <button class="btn btn-secondary btn-sm" id="btn-analysis-first">⏮️</button>
+              <button class="btn btn-secondary btn-sm" id="btn-analysis-prev">◀️</button>
+              <button class="btn btn-secondary btn-sm" id="btn-analysis-next">▶️</button>
+              <button class="btn btn-secondary btn-sm" id="btn-analysis-last">⏭️</button>
+            </div>
+          </div>
+
+          <!-- Active Game Options -->
+          <div class="chess-game-actions" id="chess-game-actions">
+            <button class="btn btn-action resign" id="btn-chess-resign" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); font-size: 0.8rem; padding: 0.5rem;">Resign</button>
+            <button class="btn btn-action draw" id="btn-chess-draw" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); font-size: 0.8rem; padding: 0.5rem;">Offer Draw</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRIENDS & CHAT DRAWER -->
+    <div class="friends-drawer" id="friends-drawer">
+      <div class="drawer-header">
+        <h3>Friends & Chat</h3>
+        <button class="btn-icon" id="btn-close-drawer">✕</button>
+      </div>
+
+      <!-- Drawer Tabs -->
+      <div class="drawer-tabs">
+        <button class="tab-btn active" data-tab="tab-friends-list">Friends</button>
+        <button class="tab-btn" data-tab="tab-chats">Chats</button>
+        <button class="tab-btn" data-tab="tab-add-friend">Add Friend</button>
+      </div>
+
+      <div class="drawer-content">
+        <!-- Friends List Tab -->
+        <div class="tab-panel active" id="tab-friends-list">
+          <ul class="friends-list" id="friends-list-container">
+            <!-- Friends items populated dynamically -->
+          </ul>
+        </div>
+
+        <!-- Chats Tab -->
+        <div class="tab-panel" id="tab-chats">
+          <div class="chat-thread-container" id="chat-thread-container">
+            <!-- Active chats selection if no active conversation -->
+            <div class="no-chat-selected" id="no-chat-selected">
+              <p>Select a friend to start chatting</p>
+            </div>
+            
+            <!-- Chat Panel -->
+            <div class="active-chat-panel hidden" id="active-chat-panel">
+              <div class="chat-thread-header">
+                <button class="back-to-list-btn" id="btn-back-to-chats">← Back</button>
+                <span class="active-chat-username" id="chat-header-username">FriendName</span>
+              </div>
+              <div class="chat-messages" id="chat-messages-container">
+                <!-- Message Bubbles -->
+              </div>
+              <form class="chat-input-form" id="form-chat-send">
+                <input type="text" id="chat-input" placeholder="Type message..." autocomplete="off">
+                <button type="submit" class="btn-chat-send">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Friend Tab -->
+        <div class="tab-panel" id="tab-add-friend">
+          <div class="add-friend-form-container">
+            <p class="section-desc">Search for user by username to add them as friend.</p>
+            <form id="form-add-friend">
+              <div class="input-group">
+                <input type="text" id="input-friend-search" placeholder="Enter username..." required autocomplete="off">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm full-width">Add Friend</button>
+            </form>
+            <div id="add-friend-feedback" class="feedback-msg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAYS AND TOASTS -->
+    <div class="notification-container" id="notification-container">
+      <!-- Direct toast notifications slide in here -->
+    </div>
+
+    <!-- Invite Notification Overlay (Modal Modal Dialog) -->
+    <div class="modal-overlay hidden" id="modal-invite">
+      <div class="modal-card">
+        <h3>Game Invitation!</h3>
+        <p><span class="highlight-text" id="invite-sender-name">Friend</span> invited you to play Texas Hold'em Poker!</p>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" id="btn-accept-invite">Accept</button>
+          <button class="btn btn-secondary" id="btn-decline-invite">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friend Request Modal Overlay -->
+    <div class="modal-overlay hidden" id="modal-friend-request">
+      <div class="modal-card">
+        <h3>Friend Request!</h3>
+        <p><span class="highlight-text" id="friend-request-sender-name">User</span> wants to add you as a friend!</p>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" id="btn-accept-friend">Accept</button>
+          <button class="btn btn-secondary" id="btn-decline-friend">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Too Late Invitation Modal Overlay -->
+    <div class="modal-overlay hidden" id="modal-too-late">
+      <div class="modal-card">
+        <h3>Too Late!</h3>
+        <p>You did not respond to the game invitation in time.</p>
+        <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: center;">
+          <button class="btn btn-primary" id="btn-close-too-late">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Showdown Overlay (Displays who won, ranks, and cards) -->
+    <div class="modal-overlay hidden" id="modal-showdown">
+      <div class="modal-card showdown-card">
+        <h2 id="showdown-title">Winner!</h2>
+        <p id="showdown-desc">Player won with a Full House</p>
+        
+        <div class="showdown-winner-cards" id="showdown-winner-cards">
+          <!-- Cards layout here -->
+        </div>
+
+        <button class="btn btn-primary" id="btn-showdown-continue">Next Hand</button>
+      </div>
+    </div>
+
+    <!-- Chess Setup Modal (Time Control & Mode) -->
+    <div class="modal-overlay hidden" id="modal-chess-setup">
+      <div class="modal-card">
+        <h3>Cooked Chess</h3>
+        <p class="subtitle" style="margin-bottom: 20px;">Choose Chess Time Control</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; margin-bottom: 20px;">
+          <button class="btn btn-primary" id="btn-chess-tc-bullet" style="padding: 0.8rem; font-size: 0.9rem;">
+            ⚡ 1 Min (Bullet)
+          </button>
+          <button class="btn btn-primary" id="btn-chess-tc-blitz" style="padding: 0.8rem; font-size: 0.9rem;">
+            🔥 3 Min (Blitz)
+          </button>
+          <button class="btn btn-primary" id="btn-chess-tc-rapid" style="padding: 0.8rem; font-size: 0.9rem;">
+            ⏱️ 10 Min (Rapid)
+          </button>
+        </div>
+
+        <button class="btn btn-secondary full-width" id="btn-chess-setup-close">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Chess Invite Notification Overlay -->
+    <div class="modal-overlay hidden" id="modal-invite-chess">
+      <div class="modal-card">
+        <h3>Chess Game Invitation!</h3>
+        <p><span class="highlight-text" id="invite-chess-sender-name">Friend</span> invited you to play Cooked Chess (<span id="invite-chess-tc">3 Min</span>)!</p>
+        <div class="modal-buttons" style="margin-top: 20px;">
+          <button class="btn btn-primary" id="btn-accept-invite-chess">Accept</button>
+          <button class="btn btn-secondary" id="btn-decline-invite-chess">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nitro Type Invite Notification Overlay -->
+    <div class="modal-overlay hidden" id="modal-invite-nitro">
+      <div class="modal-card">
+        <h3>Nitro Type Invitation!</h3>
+        <p><span class="highlight-text" id="invite-nitro-sender-name">Friend</span> invited you to a speed-typing race!</p>
+        <div class="modal-buttons" style="margin-top: 20px;">
+          <button class="btn btn-primary" id="btn-accept-invite-nitro">Accept</button>
+          <button class="btn btn-secondary" id="btn-decline-invite-nitro">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hexanaut Invite Notification Overlay -->
+    <div class="modal-overlay hidden" id="modal-invite-hexanaut">
+      <div class="modal-card">
+        <h3>Hexanaut.io Invitation!</h3>
+        <p><span class="highlight-text" id="invite-hexanaut-sender-name">Friend</span> invited you to a Hexanaut.io battle!</p>
+        <div class="modal-buttons" style="margin-top: 20px;">
+          <button class="btn btn-primary" id="btn-accept-invite-hexanaut">Accept</button>
+          <button class="btn btn-secondary" id="btn-decline-invite-hexanaut">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chess Game Over Overlay -->
+    <div class="modal-overlay hidden" id="modal-chess-gameover">
+      <div class="modal-card">
+        <h2 id="chess-gameover-title">Game Over</h2>
+        <p id="chess-gameover-desc">White won by Checkmate</p>
+        <p id="chess-gameover-elo" style="font-weight: 600; color: var(--accent-purple); margin-top: 10px;"></p>
+        
+        <div class="modal-buttons" style="margin-top: 20px; display: flex; gap: 10px; width: 100%;">
+          <button class="btn btn-primary" style="flex: 1; padding: 0.5rem;" id="btn-chess-analyze">Analyze Game</button>
+          <button class="btn btn-secondary" style="flex: 1; padding: 0.5rem;" id="btn-chess-gameover-close">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. NITRO TYPE GAME SCREEN -->
+    <section class="screen screen-nitro hidden" id="screen-nitro">
+      <div class="nitro-room-header">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-nitro">
+          ← Leave Race
+        </button>
+        <div class="nitro-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #ec4899;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.5));">
+            <path d="M10 2h4M4 13h16M2 17h20M5 10h14" stroke-width="2"/>
+            <circle cx="6" cy="18" r="2" fill="currentColor"/>
+            <circle cx="18" cy="18" r="2" fill="currentColor"/>
+            <path d="M7 6h10l2 4H5L7 6z" stroke-width="2" fill="none"/>
+          </svg>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 0.9rem;">NITRO TYPE</span>
+        </div>
+        <div class="nitro-player-info">
+          Level: <span id="nitro-race-level" style="font-weight: 600;">1</span> (Stars: <span id="nitro-race-stars">0/3</span>)
+        </div>
+        <div class="nitro-game-message" id="nitro-message">
+          Warm up your fingers!
+        </div>
+      </div>
+
+      <div class="nitro-track-container" id="nitro-track-container">
+        <!-- 5 parallel lanes, one for each competitor -->
+        <div class="nitro-lane" id="nitro-lane-0">
+          <div class="lane-info">
+            <span class="lane-player-name">Player 1</span>
+            <span class="lane-player-wpm">0 WPM</span>
+          </div>
+          <div class="lane-track">
+            <div class="checkered-finish"></div>
+            <div class="racer-car" id="racer-car-0">🚗</div>
+          </div>
+        </div>
+        <div class="nitro-lane" id="nitro-lane-1">
+          <div class="lane-info">
+            <span class="lane-player-name">Player 2</span>
+            <span class="lane-player-wpm">0 WPM</span>
+          </div>
+          <div class="lane-track">
+            <div class="checkered-finish"></div>
+            <div class="racer-car" id="racer-car-1">🚗</div>
+          </div>
+        </div>
+        <div class="nitro-lane" id="nitro-lane-2">
+          <div class="lane-info">
+            <span class="lane-player-name">Player 3</span>
+            <span class="lane-player-wpm">0 WPM</span>
+          </div>
+          <div class="lane-track">
+            <div class="checkered-finish"></div>
+            <div class="racer-car" id="racer-car-2">🚗</div>
+          </div>
+        </div>
+        <div class="nitro-lane" id="nitro-lane-3">
+          <div class="lane-info">
+            <span class="lane-player-name">Player 4</span>
+            <span class="lane-player-wpm">0 WPM</span>
+          </div>
+          <div class="lane-track">
+            <div class="checkered-finish"></div>
+            <div class="racer-car" id="racer-car-3">🚗</div>
+          </div>
+        </div>
+        <div class="nitro-lane" id="nitro-lane-4">
+          <div class="lane-info">
+            <span class="lane-player-name">Player 5</span>
+            <span class="lane-player-wpm">0 WPM</span>
+          </div>
+          <div class="lane-track">
+            <div class="checkered-finish"></div>
+            <div class="racer-car" id="racer-car-4">🚗</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nitro-typing-container">
+        <!-- Display paragraph here -->
+        <div class="nitro-paragraph-box" id="nitro-paragraph-box">
+          <!-- Text spans dynamically generated -->
+          <span style="color:var(--text-muted);">Loading paragraph...</span>
+        </div>
+        
+        <!-- Input area -->
+        <div class="nitro-input-row">
+          <input type="text" id="nitro-type-input" autocomplete="off" placeholder="Start typing here..." disabled>
+          <div class="nitro-live-stats">
+            <div>WPM: <span id="nitro-live-wpm" style="font-weight:700; color:var(--accent-gold);">0</span></div>
+            <div>Accuracy: <span id="nitro-live-acc" style="font-weight:700; color:#10b981;">100%</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. NITRO TYPE CAR SHOP SCREEN -->
+    <section class="screen screen-nitro-shop hidden" id="screen-nitro-shop">
+      <div class="shop-container">
+        <div class="shop-header">
+          <button class="btn btn-secondary btn-sm" id="btn-shop-back" onclick="window.GamingHubUI.showScreen('screen-dashboard')">
+            ← Back to Dashboard
+          </button>
+          <div style="display:flex; align-items:center; gap:1.5rem;">
+            <h2>🏎️ Custom Car Shop</h2>
+            <div class="shop-coin-balance">Balance: <span id="shop-coins-val" style="color:var(--accent-gold); font-weight:800;">0</span> 🪙</div>
+          </div>
+          <p class="subtitle">Purchase cars and equip them for speed boosts in races</p>
+        </div>
+        
+        <div class="shop-grid" id="shop-cars-grid">
+          <!-- Dynamically populated car cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. HEXANAUT GAME SCREEN -->
+    <section class="screen screen-hexanaut hidden" id="screen-hexanaut" style="position: relative; display: flex; flex-direction: column; height: 100vh;">
+      <div class="hexanaut-room-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass);">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-hexanaut">
+          ← Back to Hub
+        </button>
+        <div class="hexanaut-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #10b981;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));">
+            <path d="M12 2l8.66 5v10L12 22l-8.66-5V7z" stroke-width="2" fill="none"/>
+          </svg>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem;">HEXANAUT.IO</span>
+        </div>
+        <a href="https://hexanaut.io/" target="_blank" class="btn btn-primary btn-sm" style="display: flex; align-items: center; gap: 6px; text-decoration: none; font-weight: bold; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); color: white;">
+          <span>🌐 Play in New Tab</span>
+        </a>
+      </div>
+
+      <div style="flex: 1; overflow: hidden; background: #020617; display: flex; flex-direction: column;">
+        <iframe id="hexanaut-iframe" src="about:blank" style="width: 100%; flex: 1; border: none;" allow="autoplay; gamepad; fullscreen"></iframe>
+      </div>
+    </section>
+
+    <!-- 9. FLAPPY BIRD SCREEN -->
+    <section class="screen screen-flappy hidden" id="screen-flappy" style="position: relative; display: flex; flex-direction: column; height: 100vh;">
+      <div class="hexanaut-room-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass);">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-flappy">
+          ← Back to Hub
+        </button>
+        <div class="hexanaut-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #f59e0b;">
+          <span>🐦</span>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem;">FLAPPY BIRD</span>
+        </div>
+        <div class="game-score-display" style="font-size: 0.95rem; color: var(--text-main); font-weight: bold; display: flex; gap: 15px;">
+          <div>Score: <span id="flappy-score-val" style="color: #f59e0b; font-weight: 800;">0</span></div>
+          <div>Best: <span id="flappy-highscore-val" style="color: var(--accent-gold); font-weight: 800;">0</span></div>
+        </div>
+      </div>
+      <div class="game-content-area" style="flex: 1; display: flex; align-items: center; justify-content: center; background: #020617; position: relative; overflow: hidden;">
+        <canvas id="flappy-canvas" width="400" height="520" style="background: linear-gradient(to bottom, #3b82f6, #60a5fa); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.15); max-height: 85vh; max-width: 95vw;"></canvas>
+        <div id="flappy-start-overlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(15,23,42,0.8); z-index: 10; border-radius: 12px; text-align: center;">
+          <h2 style="color: #f59e0b; font-size: 2rem; margin-top:0; margin-bottom: 10px; font-family: var(--font-family-header);">FLAPPY BIRD</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; max-width: 250px;">Press <strong>SPACE</strong> or <strong>TAP SCREEN</strong> to flap wings and start!</p>
+          <button class="btn btn-primary" id="btn-start-flappy" style="padding: 10px 28px; font-weight:800; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border:none; box-shadow: 0 0 15px rgba(245,158,11,0.4);">START GAME</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. TIC TAC TOE SCREEN -->
+    <section class="screen screen-tictactoe hidden" id="screen-tictactoe" style="position: relative; display: flex; flex-direction: column; height: 100vh;">
+      <div class="hexanaut-room-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass);">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-tictactoe">
+          ← Back to Hub
+        </button>
+        <div class="hexanaut-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #3b82f6;">
+          <span>❌</span>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem;">TIC TAC TOE</span>
+        </div>
+        <div class="game-score-display" style="font-size: 0.9rem; color: var(--text-main); font-weight: bold; display: flex; gap: 12px;">
+          <div style="color: #10b981;">W: <span id="ttt-wins-val">0</span></div>
+          <div style="color: #ef4444;">L: <span id="ttt-losses-val">0</span></div>
+          <div style="color: var(--text-muted);">D: <span id="ttt-draws-val">0</span></div>
+        </div>
+      </div>
+      <div class="game-content-area" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #020617; padding: 20px;">
+        <div id="ttt-status" style="font-size: 1.3rem; font-weight: bold; color: var(--text-main); margin-bottom: 25px; text-shadow: 0 0 10px rgba(59, 130, 246, 0.3); font-family: var(--font-family-header);">YOUR TURN (X)</div>
+        <div class="ttt-board" style="display: grid; grid-template-columns: repeat(3, 90px); grid-gap: 12px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <div class="ttt-cell" data-index="0" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="1" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="2" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="3" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="4" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="5" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="6" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="7" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+          <div class="ttt-cell" data-index="8" style="width: 90px; height: 90px; background: rgba(15,23,42,0.85); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: var(--text-main); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.1s;"></div>
+        </div>
+        <button class="btn btn-secondary" id="btn-reset-ttt" style="margin-top: 30px; padding: 10px 24px; font-weight:bold;">RESET BOARD</button>
+      </div>
+    </section>
+
+    <!-- 11. SNAKE ARENA SCREEN -->
+    <section class="screen screen-snake hidden" id="screen-snake" style="position: relative; display: flex; flex-direction: column; height: 100vh;">
+      <div class="hexanaut-room-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass);">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-snake">
+          ← Back to Hub
+        </button>
+        <div class="hexanaut-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #10b981;">
+          <span>🐍</span>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem;">SNAKE ARENA</span>
+        </div>
+        <div class="game-score-display" style="font-size: 0.95rem; color: var(--text-main); font-weight: bold; display: flex; gap: 15px;">
+          <div>Score: <span id="snake-score-val" style="color: #10b981; font-weight: 800;">0</span></div>
+          <div>Best: <span id="snake-highscore-val" style="color: var(--accent-gold); font-weight: 800;">0</span></div>
+        </div>
+      </div>
+      <div class="game-content-area" style="flex: 1; display: flex; align-items: center; justify-content: center; background: #020617; position: relative; overflow: hidden;">
+        <canvas id="snake-canvas" width="400" height="400" style="background: #0b1329; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.12); max-height: 85vh; max-width: 95vw;"></canvas>
+        <div id="snake-start-overlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(15,23,42,0.8); z-index: 10; border-radius: 12px; text-align: center;">
+          <h2 style="color: #10b981; font-size: 2rem; margin-top:0; margin-bottom: 10px; font-family: var(--font-family-header);">SNAKE ARENA</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; max-width: 280px;">Use <strong>ARROW KEYS</strong> or <strong>WASD</strong> to navigate snake. Eat glowing neon bits!</p>
+          <button class="btn btn-primary" id="btn-start-snake" style="padding: 10px 28px; font-weight:800; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border:none; box-shadow: 0 0 15px rgba(16,185,129,0.45);">START ARENA</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. 2048 SCREEN -->
+    <section class="screen screen-2048 hidden" id="screen-2048" style="position: relative; display: flex; flex-direction: column; height: 100vh;">
+      <div class="hexanaut-room-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass);">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-2048">
+          ← Back to Hub
+        </button>
+        <div class="hexanaut-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #8b5cf6;">
+          <span>🔢</span>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem;">2048 PUZZLE</span>
+        </div>
+        <div class="game-score-display" style="font-size: 0.95rem; color: var(--text-main); font-weight: bold; display: flex; gap: 15px;">
+          <div>Score: <span id="score2048-val" style="color: #8b5cf6; font-weight: 800;">0</span></div>
+          <div>Best: <span id="highest2048-val" style="color: var(--accent-gold); font-weight: 800;">0</span></div>
+        </div>
+      </div>
+      <div class="game-content-area" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #020617; padding: 20px;">
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+          <button class="btn btn-secondary btn-sm" id="btn-undo-2048" style="font-weight:bold;">UNDO MOVE</button>
+          <button class="btn btn-primary btn-sm" id="btn-reset-2048" style="font-weight:bold; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border:none; box-shadow: 0 0 10px rgba(139,92,246,0.3);">NEW GAME</button>
+        </div>
+        <div class="board2048" id="board2048" style="display: grid; grid-template-columns: repeat(4, 72px); grid-template-rows: repeat(4, 72px); grid-gap: 8px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.5); user-select: none;">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. MINESWEEPER SCREEN -->
+    <section class="screen screen-minesweeper hidden" id="screen-minesweeper" style="position: relative; display: flex; flex-direction: column; height: 100vh;">
+      <div class="hexanaut-room-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass);">
+        <button class="btn btn-secondary btn-sm" id="btn-leave-minesweeper">
+          ← Back to Hub
+        </button>
+        <div class="hexanaut-header-logo" style="display: flex; align-items: center; gap: 0.5rem; color: #ec4899;">
+          <span>💣</span>
+          <span style="font-family: var(--font-family-header); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem;">MINESWEEPER</span>
+        </div>
+        <div class="game-score-display" style="font-size: 0.95rem; color: var(--text-main); font-weight: bold; display: flex; gap: 15px;">
+          <div>Mines: <span id="mines-count-val" style="color: #ec4899; font-weight: 800;">10</span></div>
+          <div>Time: <span id="mines-time-val" style="color: var(--accent-gold); font-weight: 800;">0</span>s</div>
+        </div>
+      </div>
+      <div class="game-content-area" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #020617; padding: 20px;">
+        <div style="display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap:wrap; justify-content:center;">
+          <select id="mines-difficulty" style="background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 15px; color: var(--text-main); font-weight: 700; cursor: pointer; outline: none;">
+            <option value="easy">Easy (9x9, 10 Mines)</option>
+            <option value="medium">Medium (12x12, 20 Mines)</option>
+            <option value="hard">Hard (15x15, 35 Mines)</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="btn-reset-mines" style="font-weight:bold; background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); border:none; box-shadow: 0 0 10px rgba(236,72,153,0.3);">NEW GAME</button>
+        </div>
+        <div id="mines-board" style="display: grid; grid-gap: 4px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Nitro Type Results Modal Overlay -->
+    <div class="modal-overlay hidden" id="modal-nitro-results">
+      <div class="modal-card results-card" style="max-width: 450px;">
+        <h2 id="nitro-results-title">1st Place!</h2>
+        <p id="nitro-results-desc" class="subtitle">You completed the level successfully!</p>
+        
+        <!-- Placements list -->
+        <div class="nitro-placements-list" id="nitro-placements-list" style="margin-bottom: 20px; width: 100%;">
+          <!-- Placement rows dynamically populated -->
+        </div>
+
+        <!-- Rewards Details -->
+        <div class="nitro-rewards-box" style="display: flex; justify-content: space-around; width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 20px;">
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Coins Earned</div>
+            <div style="font-size: 1.25rem; font-weight: 800; color: var(--accent-gold);" id="nitro-reward-coins">+0 🪙</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Stars Progress</div>
+            <div style="font-size: 1.25rem; font-weight: 800; color: #a78bfa;" id="nitro-reward-stars">+0 ⭐</div>
+          </div>
+        </div>
+
+        <!-- Stars visualizer -->
+        <div class="nitro-stars-visualizer" style="display: flex; gap: 0.5rem; justify-content: center; font-size: 2rem; margin-bottom: 20px;">
+          <span class="star-slot" id="nitro-star-1">☆</span>
+          <span class="star-slot" id="nitro-star-2">☆</span>
+          <span class="star-slot" id="nitro-star-3">☆</span>
+        </div>
+
+        <h3 id="nitro-level-up-text" class="text-glow animate-pulse hidden" style="color: var(--accent-gold); text-align: center; margin-bottom: 20px; font-weight: 800; font-family: var(--font-family-header);">LEVEL UP! LEVEL 2</h3>
+
+        <button class="btn btn-primary full-width" id="btn-nitro-results-close">Back to Dashboard</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts loaded in dependency order -->
+  <script src="js/audio.js?v=1.1"></script>
+  <script src="js/state.js?v=1.3"></script>
+  <script src="js/sync.js?v=1.3"></script>
+  <script src="js/poker.js?v=1.1"></script>
+  <script src="js/bot.js?v=1.1"></script>
+  <script src="js/chess.js?v=1.1"></script>
+  <script src="js/hexanaut.js?v=1.3"></script>
+  <script src="js/mini-games.js?v=1.0"></script>
+  <script src="js/ui.js?v=1.1"></script>
+  <script src="js/app.js?v=1.1"></script>
+</body>
+</html>
